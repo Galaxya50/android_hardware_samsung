@@ -46,6 +46,36 @@ BiometricsFingerprint::BiometricsFingerprint() : mClientCallback(nullptr) {
     }
 }
 
+/*
+ * Write value to path and close file.
+ */
+template <typename T>
+static void set(const std::string& path, const T& value) {
+    std::ofstream file(path);
+
+    if (!file) {
+        PLOG(ERROR) << "Failed to open: " << path;
+        return;
+    }
+
+    LOG(DEBUG) << "write: " << path << " value: " << value;
+
+    file << value << std::endl;
+
+    if (!file) {
+        PLOG(ERROR) << "Failed to write: " << path << " value: " << value;
+    }
+}
+
+template <typename T>
+static T get(const std::string& path, const T& def) {
+    std::ifstream file(path);
+    T result;
+
+    file >> result;
+    return file.fail() ? def : result;
+}
+
 BiometricsFingerprint::~BiometricsFingerprint() {
     if (ss_fingerprint_close() != 0) {
         LOG(ERROR) << "Can't close HAL module";
