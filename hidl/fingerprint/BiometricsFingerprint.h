@@ -19,10 +19,6 @@
 #include <chrono>
 #include <thread>
 
-#ifdef HAS_FINGERPRINT_GESTURES
-#include <linux/uinput.h>
-#endif
-
 #include <hardware/fingerprint.h>
 #include <hardware/hardware.h>
 #include <hidl/MQDescriptor.h>
@@ -82,7 +78,6 @@ struct BiometricsFingerprint : public IBiometricsFingerprint {
     int waitForSensor(std::chrono::milliseconds pollWait, std::chrono::milliseconds timeOut);
     static void notify(
         const fingerprint_msg_t* msg); /* Static callback for legacy HAL implementation */
-    void handleEvent(int eventCode);
     static Return<RequestStatus> ErrorFilter(int32_t error);
     static FingerprintError VendorErrorFilter(int32_t error, int32_t* vendorCode);
     static FingerprintAcquiredInfo VendorAcquiredFilter(int32_t error, int32_t* vendorCode);
@@ -91,9 +86,6 @@ struct BiometricsFingerprint : public IBiometricsFingerprint {
     std::mutex mClientCallbackMutex;
     sp<IBiometricsFingerprintClientCallback> mClientCallback;
     bool mIsUdfps;
-#ifdef HAS_FINGERPRINT_GESTURES
-    int uinputFd;
-#endif
 
     int (*ss_fingerprint_close)();
     int (*ss_fingerprint_open)(const char* id);
