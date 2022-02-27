@@ -87,10 +87,16 @@ Return<bool> BiometricsFingerprint::isUdfps(uint32_t) {
 }
 
 Return<void> BiometricsFingerprint::onFingerDown(uint32_t, uint32_t, float, float) {
+    mPreviousBrightness = get<std::string>(SEM_BRIGHTNESS_PATH, "");
+    set(SEM_BRIGHTNESS_PATH, "319");
     return Void();
 }
 
 Return<void> BiometricsFingerprint::onFingerUp() {
+    if (!mPreviousBrightness.empty()) {
+        set(SEM_BRIGHTNESS_PATH, mPreviousBrightness);
+        mPreviousBrightness = "";
+    }
     return Void();
 }
 

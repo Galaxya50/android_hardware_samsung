@@ -104,3 +104,4 @@
 #define SEM_TSP_CMD_PATH "/sys/class/sec/tsp/cmd"
 #define SEM_TSP_FOD_ENABLE "fod_enable,1,1,0"
 #define SEM_TSP_FOD_DISABLE "fod_enable,0"
+#define SEM_BRIGHTNESS_PATH "/sys/class/backlight/panel/brightness"
