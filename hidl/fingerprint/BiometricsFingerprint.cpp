@@ -44,11 +44,6 @@ BiometricsFingerprint::BiometricsFingerprint() : mClientCallback(nullptr) {
     if (!openHal()) {
         LOG(ERROR) << "Can't open HAL module";
     }
-
-    std::ifstream in("/sys/devices/virtual/fingerprint/fingerprint/position");
-    mIsUdfps = !!in;
-    if (in)
-        in.close();
 }
 
 BiometricsFingerprint::~BiometricsFingerprint() {
@@ -58,7 +53,7 @@ BiometricsFingerprint::~BiometricsFingerprint() {
 }
 
 Return<bool> BiometricsFingerprint::isUdfps(uint32_t) {
-    return mIsUdfps;
+    return true;
 }
 
 Return<void> BiometricsFingerprint::onFingerDown(uint32_t, uint32_t, float, float) {

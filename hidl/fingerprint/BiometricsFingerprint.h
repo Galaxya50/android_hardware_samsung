@@ -85,7 +85,6 @@ struct BiometricsFingerprint : public IBiometricsFingerprint {
 
     std::mutex mClientCallbackMutex;
     sp<IBiometricsFingerprintClientCallback> mClientCallback;
-    bool mIsUdfps;
 
     int (*ss_fingerprint_close)();
     int (*ss_fingerprint_open)(const char* id);
