@@ -518,6 +518,22 @@ void BiometricsFingerprint::handleEvent(int eventCode) {
             }
         break;
 #endif
+        case SEM_FINGERPRINT_EVENT_CAPTURE_STARTED:
+            int ret = request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_PRESSED);
+            if (ret) {
+                LOG(ERROR) << "Request vendor touch event paramPressed failed";
+                return;
+            }
+            onFingerDown();
+        break;
+        case SEM_FINGERPRINT_EVENT_CAPTURE_READY:
+            onFingerUp();
+            int ret = request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_RELEASED);
+            if (ret) {
+                LOG(ERROR) << "Request vendor touch event paramReleased failed";
+                return;
+            }
+        break;
     }
 }
 
