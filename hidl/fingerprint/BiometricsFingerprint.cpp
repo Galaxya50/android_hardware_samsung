@@ -134,16 +134,6 @@ Return<void> BiometricsFingerprint::onFingerUp() {
     return Void();
 }
 
-Return<void> BiometricsFingerprint::onShowUdfpsOverlay() {
-    set(SEM_TSP_CMD_PATH, SEM_TSP_FOD_ENABLE);
-    return Void();
-}
-
-Return<void> BiometricsFingerprint::onHideUdfpsOverlay() {
-    set(SEM_TSP_CMD_PATH, SEM_TSP_FOD_DISABLE);
-    return Void();
-}
-
 Return<RequestStatus> BiometricsFingerprint::ErrorFilter(int32_t error) {
     switch (error) {
         case 0:
