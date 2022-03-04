@@ -467,7 +467,7 @@ void BiometricsFingerprint::handleEvent(int eventCode) {
     switch (eventCode) {
 #ifdef HAS_FINGERPRINT_GESTURES
         case SEM_FINGERPRINT_EVENT_GESTURE_SWIPE_DOWN:
-        case SEM_FINGERPRINT_EVENT_GESTURE_SWIPE_UP:
+        case SEM_FINGERPRINT_EVENT_GESTURE_SWIPE_UP: {
             struct input_event event {};
             int keycode = eventCode == SEM_FINGERPRINT_EVENT_GESTURE_SWIPE_UP ?
                           KEY_UP : KEY_DOWN;
@@ -506,28 +506,23 @@ void BiometricsFingerprint::handleEvent(int eventCode) {
             if (write(uinputFd, &event, sizeof(event)) < 0) {
                 LOG(ERROR) << "Write EV_SYN to uinput node failed";
                 return;
-            }
-            
-            break;
+            }  
+        } break;
 #endif
-        case SEM_FINGERPRINT_EVENT_CAPTURE_STARTED:
+        case SEM_FINGERPRINT_EVENT_CAPTURE_STARTED: {
             set(SEM_TSP_CMD_PATH, SEM_TSP_FOD_ENABLE);
-            int retp = request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_PRESSED);
-            if (retp) {
+            if (request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_PRESSED)) {
                 LOG(ERROR) << "Request vendor touch event paramPressed failed";
                 return;
             }
-
-            break;
-        case SEM_FINGERPRINT_EVENT_CAPTURE_READY:
-            int retr = request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_RELEASED);
-            if (retr) {
+        } break;
+        case SEM_FINGERPRINT_EVENT_CAPTURE_READY: {
+            if (request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_RELEASED)) {
                 LOG(ERROR) << "Request vendor touch event paramReleased failed";
                 return;
             }
             set(SEM_TSP_CMD_PATH, SEM_TSP_FOD_DISABLE);
-
-            break;
+        } break;
     }
 }
 
