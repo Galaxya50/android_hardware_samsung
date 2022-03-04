@@ -512,16 +512,16 @@ void BiometricsFingerprint::handleEvent(int eventCode) {
 #endif
         case SEM_FINGERPRINT_EVENT_CAPTURE_STARTED:
             set(SEM_TSP_CMD_PATH, SEM_TSP_FOD_ENABLE);
-            int ret = request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_PRESSED);
-            if (ret) {
+            int retp = request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_PRESSED);
+            if (retp) {
                 LOG(ERROR) << "Request vendor touch event paramPressed failed";
                 return;
             }
 
             break;
         case SEM_FINGERPRINT_EVENT_CAPTURE_READY:
-            int ret = request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_RELEASED);
-            if (ret) {
+            int retr = request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_RELEASED);
+            if (retr) {
                 LOG(ERROR) << "Request vendor touch event paramReleased failed";
                 return;
             }
