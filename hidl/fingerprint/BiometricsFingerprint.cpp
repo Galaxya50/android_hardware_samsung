@@ -127,10 +127,17 @@ Return<bool> BiometricsFingerprint::isUdfps(uint32_t) {
 }
 
 Return<void> BiometricsFingerprint::onFingerDown(uint32_t, uint32_t, float, float) {
+    mPreviousBrightness = get<std::string>(SEM_BRIGHTNESS_PATH, "");
+    set(SEM_BRIGHTNESS_PATH, "319");
     return Void();
 }
 
 Return<void> BiometricsFingerprint::onFingerUp() {
+    if (!mPreviousBrightness.empty()) {
+        set(SEM_BRIGHTNESS_PATH, mPreviousBrightness);
+        mPreviousBrightness = "";
+    }
+
     return Void();
 }
 
@@ -500,30 +507,27 @@ void BiometricsFingerprint::handleEvent(int eventCode) {
                 LOG(ERROR) << "Write EV_SYN to uinput node failed";
                 return;
             }
-        break;
+            
+            break;
 #endif
         case SEM_FINGERPRINT_EVENT_CAPTURE_STARTED:
+            set(SEM_TSP_CMD_PATH, SEM_TSP_FOD_ENABLE);
             int ret = request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_PRESSED);
             if (ret) {
                 LOG(ERROR) << "Request vendor touch event paramPressed failed";
                 return;
             }
 
-            mPreviousBrightness = get<std::string>(SEM_BRIGHTNESS_PATH, "");
-            set(SEM_BRIGHTNESS_PATH, "319");
-        break;
+            break;
         case SEM_FINGERPRINT_EVENT_CAPTURE_READY:
-            if (!mPreviousBrightness.empty()) {
-                set(SEM_BRIGHTNESS_PATH, mPreviousBrightness);
-                mPreviousBrightness = "";
-            }
-            
             int ret = request(SEM_REQUEST_TOUCH_EVENT, SEM_FINGERPRINT_PARAM_RELEASED);
             if (ret) {
                 LOG(ERROR) << "Request vendor touch event paramReleased failed";
                 return;
             }
-        break;
+            set(SEM_TSP_CMD_PATH, SEM_TSP_FOD_DISABLE);
+
+            break;
     }
 }
 
